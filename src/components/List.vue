@@ -1,11 +1,13 @@
 <template>
   <div class="list">
-    <template v-for="item in items">
-      <router-link class="item" :to="{name: 'DetailView', params: { id: item.id }}">
+    <template v-if="mold === 'thumbnail'" v-for="item in items">
+      <router-link
+        class="thumbnail"
+        :to="{name: 'DetailView', params: { id: item.id }}">
         <div class="content">
           <img :src="item.image_hlarge" alt="cover">
           <h3>{{item.title}}</h3>
-          <p>{{item.content | subStr}}</p>
+          <p style="-webkit-box-orient: vertical">{{item.content | subStr}}</p>
         </div>
         <div class="author">
           <span class="name">{{item.category_name}}</span>
@@ -15,24 +17,40 @@
         </div>
       </router-link>
     </template>
+    <template v-if="mold === 'basic'">
+      <ul class="basic">
+        <li v-for="item in items">
+          <a href="#">
+            <h3>{{item.title}}</h3>
+            <div class="info">{{item.comments}}</div>
+          </a>
+        </li>
+      </ul>
+    </template>
   </div>
 </template>
 
 <script>
 export default {
   name: 'list',
-  props: ['items'],
+  props: {
+    mold: {
+      type: String,
+      default: 'basic'
+    },
+    items: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
     }
   },
   filters: {
     subStr: function (value) {
-      console.log(value)
-      let a
-      a = value.replace(/(.+)\s*/g, '')
-      console.log(a)
-      return value.slice(0, 30)
+      let a = value.replace(/<.+>|\s, '')
+      return a
     }
   }
 }
@@ -40,7 +58,7 @@ export default {
 
 <style lang='scss' scoped>
 .list {
-  .item {
+  .thumbnail {
     position: relative;
     display: block;
     padding: 2.5rem 1.8rem 2.5rem 0;
@@ -56,17 +74,15 @@ export default {
       margin-bottom: 0.6rem;
       line-height: 1.41;
       text-align: justify;
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       font-weight: 500;
       color: #494949;
     }
 
     p {
       line-height: 1.5;
-      text-align: justify;
       color: #aaa;
       font-size: 1.2rem;
-      overflow: hidden;
     }
 
     img {
@@ -88,7 +104,7 @@ export default {
     }
   }
 
-  .item ~ .item::before {
+  .thumbnail ~ .thumbnail::before {
     position: absolute;
     left: 0;
     top: 0;
@@ -96,6 +112,22 @@ export default {
     height: 0.1rem;
     content: '';
     background: #e3e3e3;
+  }
+
+  .basic {
+    h3 {
+      padding: 0;
+      line-height: 1.41;
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: #494949;
+    }
+
+    .info {
+      margin-top: 0.5rem;
+      font-size: 1.4rem;
+      color: #42bd56;
+    }
   }
 }
 </style>
