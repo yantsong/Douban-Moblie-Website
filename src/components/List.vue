@@ -49,7 +49,7 @@ export default {
   },
   filters: {
     subStr: function (value) {
-      let a = value.replace(/<.+>|\s, '')
+      let a = value.replace(/<.+>|\s/g, '')
       return a
     }
   }
@@ -83,6 +83,9 @@ export default {
       line-height: 1.5;
       color: #aaa;
       font-size: 1.2rem;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
     }
 
     img {
